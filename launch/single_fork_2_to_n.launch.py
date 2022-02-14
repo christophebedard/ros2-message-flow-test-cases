@@ -1,4 +1,4 @@
-# Copyright 2021 Christophe Bedard
+# Copyright 2022 Christophe Bedard
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for the N-to-M message link type."""
+"""Launch file for a simple single fork case with 2-to-N merge."""
 
 from launch import LaunchDescription
 from launch.actions import SetEnvironmentVariable
@@ -24,7 +24,7 @@ def generate_launch_description():
     return LaunchDescription([
         SetEnvironmentVariable('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'),
         Trace(
-            session_name='single_n-to-m',
+            session_name='single_fork_2-to-n',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -34,19 +34,31 @@ def generate_launch_description():
         Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['ab', '100'],
+            arguments=['ab', '50'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='n_to_m',
-            arguments=['ab', 'cd', '50'],
+            executable='one_to_one',
+            arguments=['a', 'c'],
+            output='screen',
+        ),
+        Node(
+            package='ros2_message_flow_testcases',
+            executable='one_to_one',
+            arguments=['b', 'd'],
+            output='screen',
+        ),
+        Node(
+            package='ros2_message_flow_testcases',
+            executable='two_to_n',
+            arguments=['cd', 'e'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
             executable='sink',
-            arguments=['cd'],
+            arguments=['e'],
             output='screen',
         ),
     ])

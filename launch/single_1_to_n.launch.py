@@ -15,6 +15,7 @@
 """Launch file for the 1-to-N message link type."""
 
 from launch import LaunchDescription
+from launch.actions import SetEnvironmentVariable
 from launch_ros.actions import Node
 from tracetools_launch.action import Trace
 from tracetools_trace.tools.names import DEFAULT_EVENTS_ROS
@@ -22,6 +23,7 @@ from tracetools_trace.tools.names import DEFAULT_EVENTS_ROS
 
 def generate_launch_description():
     return LaunchDescription([
+        SetEnvironmentVariable('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'),
         Trace(
             session_name='single_1-to-n',
             events_kernel=[],
