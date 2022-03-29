@@ -22,22 +22,22 @@
 #include "ros2_message_flow_testcases/utils.hpp"
 
 /**
- * 1-to-1
+ * Synchronized 1-to-1
  * Node that subscribes to a single topic and publishes a single topic.
  * A new message is published directly on every new message that is received.
  * This link type does not require any instrumentation.
  */
-class OneToOneNode : public rclcpp::Node
+class SyncOneToOneNode : public rclcpp::Node
 {
 public:
-  OneToOneNode(const std::pair<char, char> & topics)
-  : Node("one_to_one")
+  SyncOneToOneNode(const std::pair<char, char> & topics)
+  : Node("sync_one_to_one")
   {
-    RCLCPP_INFO(this->get_logger(), "1-to-1 topics: %c-%c", topics.first, topics.second);
+    RCLCPP_INFO(this->get_logger(), "Sync 1-to-1 topics: %c-%c", topics.first, topics.second);
     sub_ = this->create_subscription<std_msgs::msg::String>(
       std::string("topic_") + topics.first,
       10,
-      std::bind(&OneToOneNode::sub_callback, this, std::placeholders::_1));
+      std::bind(&SyncOneToOneNode::sub_callback, this, std::placeholders::_1));
     pub_ = this->create_publisher<std_msgs::msg::String>(
       std::string("topic_") + topics.second, 10);
   }
@@ -63,7 +63,7 @@ int main(int argc, char * argv[])
   }
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<OneToOneNode>(topics.value()));
+  rclcpp::spin(std::make_shared<SyncOneToOneNode>(topics.value()));
   rclcpp::shutdown();
   return 0;
 }

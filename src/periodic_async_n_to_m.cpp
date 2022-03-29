@@ -32,25 +32,25 @@ struct cached_sub_t
 };
 
 /**
- * N-to-M
+ * Periodic asynchronized N-to-M
  * Node that subscribes to a N topics and publishes M topics.
  * New messages are cached.
  * Publishes on M topics periodically.
  *
- * Based on:
+ * Based on the cyclic node:
  * https://github.com/ros-realtime/reference-system/blob/main/reference_system/include/reference_system/nodes/rclcpp/cyclic.hpp
  */
-class NToMNode : public rclcpp::Node
+class PeriodicAsyncNToMNode : public rclcpp::Node
 {
 public:
-  NToMNode(const std::pair<std::vector<char>, std::vector<char>> & topics, const uint32_t period)
-  : Node("n_to_m")
+  PeriodicAsyncNToMNode(const std::pair<std::vector<char>, std::vector<char>> & topics, const uint32_t period)
+  : Node("periodic_async_n_to_m")
   {
     timer_ = this->create_wall_timer(
       std::chrono::milliseconds(period),
-      std::bind(&NToMNode::timer_callback, this));
+      std::bind(&PeriodicAsyncNToMNode::timer_callback, this));
 
-    std::string info = "N-to-M topics: ";
+    std::string info = "Periodic async N-to-M topics: ";
     uint32_t sub_i = 0;
     for (const auto & sub_topic : topics.first) {
       info += sub_topic;
@@ -127,7 +127,7 @@ int main(int argc, char * argv[])
   }
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<NToMNode>(topics.value(), period.value()));
+  rclcpp::spin(std::make_shared<PeriodicAsyncNToMNode>(topics.value(), period.value()));
   rclcpp::shutdown();
   return 0;
 }

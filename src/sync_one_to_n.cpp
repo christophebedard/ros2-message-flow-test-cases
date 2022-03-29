@@ -23,23 +23,23 @@
 #include "ros2_message_flow_testcases/utils.hpp"
 
 /**
- * 1-to-N
+ * Synchronized 1-to-N
  * Node that subscribes to a single topic and publishes N topics.
  * New messages are published directly on N topics on every new message that is received.
  * This link type does not require any instrumentation.
  */
-class OneToNNode : public rclcpp::Node
+class SyncOneToNNode : public rclcpp::Node
 {
 public:
-  OneToNNode(const std::pair<char, std::vector<char>> & topics)
-  : Node("one_to_n")
+  SyncOneToNNode(const std::pair<char, std::vector<char>> & topics)
+  : Node("sync_one_to_n")
   {
-    std::string info = std::string("1-to-N topics: ") + topics.first + "-";
+    std::string info = std::string("Sync 1-to-N topics: ") + topics.first + "-";
 
     sub_ = this->create_subscription<std_msgs::msg::String>(
       std::string("topic_") + topics.first,
       10,
-      std::bind(&OneToNNode::sub_callback, this, std::placeholders::_1));
+      std::bind(&SyncOneToNNode::sub_callback, this, std::placeholders::_1));
 
     for (const auto & topic : topics.second) {
       info += topic;
@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
   }
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<OneToNNode>(topics.value()));
+  rclcpp::spin(std::make_shared<SyncOneToNNode>(topics.value()));
   rclcpp::shutdown();
   return 0;
 }

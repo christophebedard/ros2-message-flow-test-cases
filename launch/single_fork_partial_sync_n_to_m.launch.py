@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for a multiple fork case with 2-to-N merge."""
+"""Launch file for a simple single fork case with partial sync N-to-M merge."""
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from tracetools_launch.action import Trace
 def generate_launch_description():
     return LaunchDescription([
         Trace(
-            session_name='multi_fork_2-to-n',
+            session_name='single_fork_partial_sync_n-to-m',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -32,26 +32,24 @@ def generate_launch_description():
         Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['a', '50'],
+            arguments=['ab', '50'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='one_to_one',
-            # name='one_to_one_a',
+            executable='sync_one_to_one',
             arguments=['a', 'c'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='one_to_one',
-            # name='one_to_one_b',
-            arguments=['a', 'd'],
+            executable='sync_one_to_one',
+            arguments=['b', 'd'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='two_to_n',
+            executable='partial_sync_n_to_m',
             arguments=['cd', 'e'],
             output='screen',
         ),

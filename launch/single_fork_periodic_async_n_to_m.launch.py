@@ -1,4 +1,4 @@
-# Copyright 2021 Christophe Bedard
+# Copyright 2022 Christophe Bedard
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for the 1-to-1 message link type."""
+"""Launch file for a simple single fork case with periodic async N-to-M merge."""
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from tracetools_launch.action import Trace
 def generate_launch_description():
     return LaunchDescription([
         Trace(
-            session_name='single_1-to-1',
+            session_name='single_fork_periodic_async_n-to-m',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -32,19 +32,31 @@ def generate_launch_description():
         Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['a', '10'],
+            arguments=['ab', '50'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='one_to_one',
-            arguments=['a', 'b'],
+            executable='sync_one_to_one',
+            arguments=['a', 'c'],
+            output='screen',
+        ),
+        Node(
+            package='ros2_message_flow_testcases',
+            executable='sync_one_to_one',
+            arguments=['b', 'd'],
+            output='screen',
+        ),
+        Node(
+            package='ros2_message_flow_testcases',
+            executable='periodic_async_n_to_m',
+            arguments=['cd', 'e', '60'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
             executable='sink',
-            arguments=['b'],
+            arguments=['e'],
             output='screen',
         ),
     ])

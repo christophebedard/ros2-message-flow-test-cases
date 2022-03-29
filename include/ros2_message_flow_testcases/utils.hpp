@@ -38,9 +38,6 @@ parse_single_topic_pair(int argc, char * argv[]);
 std::optional<std::pair<char, std::vector<char>>>
 parse_single_topic_and_list(int argc, char * argv[]);
 
-std::optional<std::pair<std::pair<char, char>, std::vector<char>>>
-parse_topic_pair_and_list(int argc, char * argv[]);
-
 std::optional<uint32_t>
 parse_period(int argc, char * argv[], const uint16_t num_args_before);
 

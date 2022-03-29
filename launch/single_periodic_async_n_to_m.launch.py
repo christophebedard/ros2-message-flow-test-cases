@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for host 2 of 2 of a multi-host 1-to-1 ping pong case."""
+"""Launch file for the periodic async N-to-M message link type."""
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from tracetools_launch.action import Trace
 def generate_launch_description():
     return LaunchDescription([
         Trace(
-            session_name='single_1-to-1_pingpong_b',
+            session_name='single_periodic_async_n-to-m',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -31,14 +31,20 @@ def generate_launch_description():
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='one_to_one',
-            arguments=['a', 'b'],
+            executable='source',
+            arguments=['ab', '100'],
+            output='screen',
+        ),
+        Node(
+            package='ros2_message_flow_testcases',
+            executable='periodic_async_n_to_m',
+            arguments=['ab', 'cd', '50'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
             executable='sink',
-            arguments=['c'],
+            arguments=['cd'],
             output='screen',
         ),
     ])

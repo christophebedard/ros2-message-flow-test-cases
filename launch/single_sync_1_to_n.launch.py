@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for the 1-to-N message link type."""
+"""Launch file for the sync 1-to-N message link type."""
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from tracetools_launch.action import Trace
 def generate_launch_description():
     return LaunchDescription([
         Trace(
-            session_name='single_1-to-n',
+            session_name='single_sync_1-to-n',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -37,7 +37,7 @@ def generate_launch_description():
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='one_to_n',
+            executable='sync_one_to_n',
             arguments=['a', 'bc'],
             output='screen',
         ),

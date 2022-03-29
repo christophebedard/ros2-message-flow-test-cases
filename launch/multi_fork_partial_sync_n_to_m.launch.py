@@ -1,4 +1,4 @@
-# Copyright 2021 Christophe Bedard
+# Copyright 2022 Christophe Bedard
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for the 2-to-N message link type."""
+"""Launch file for a multiple fork case with partial sync N-to-M merge."""
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from tracetools_launch.action import Trace
 def generate_launch_description():
     return LaunchDescription([
         Trace(
-            session_name='single_2-to-n',
+            session_name='multi_fork_partial_sync_n-to-m',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -32,25 +32,31 @@ def generate_launch_description():
         Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['a', '100'],
+            arguments=['a', '50'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='source',
-            arguments=['b', '40'],
+            executable='sync_one_to_one',
+            arguments=['a', 'c'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='two_to_n',
-            arguments=['ab', 'c'],
+            executable='sync_one_to_one',
+            arguments=['a', 'd'],
+            output='screen',
+        ),
+        Node(
+            package='ros2_message_flow_testcases',
+            executable='partial_sync_n_to_m',
+            arguments=['cd', 'e'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
             executable='sink',
-            arguments=['c'],
+            arguments=['e'],
             output='screen',
         ),
     ])

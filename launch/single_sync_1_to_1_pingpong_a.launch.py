@@ -1,4 +1,4 @@
-# Copyright 2022 Christophe Bedard
+# Copyright 2021 Christophe Bedard
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Launch file for a simple single fork case with 2-to-N merge."""
+"""Launch file for host 1 of 2 of a multi-host sync 1-to-1 ping pong case."""
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -22,7 +22,7 @@ from tracetools_launch.action import Trace
 def generate_launch_description():
     return LaunchDescription([
         Trace(
-            session_name='single_fork_2-to-n',
+            session_name='single_sync_1-to-1_pingpong_a',
             events_kernel=[],
             events_ust=[
                 'dds:*',
@@ -32,31 +32,13 @@ def generate_launch_description():
         Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['ab', '50'],
+            arguments=['a', '5'],
             output='screen',
         ),
         Node(
             package='ros2_message_flow_testcases',
-            executable='one_to_one',
-            arguments=['a', 'c'],
-            output='screen',
-        ),
-        Node(
-            package='ros2_message_flow_testcases',
-            executable='one_to_one',
-            arguments=['b', 'd'],
-            output='screen',
-        ),
-        Node(
-            package='ros2_message_flow_testcases',
-            executable='two_to_n',
-            arguments=['cd', 'e'],
-            output='screen',
-        ),
-        Node(
-            package='ros2_message_flow_testcases',
-            executable='sink',
-            arguments=['e'],
+            executable='sync_one_to_one',
+            arguments=['b', 'c'],
             output='screen',
         ),
     ])

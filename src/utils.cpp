@@ -82,22 +82,6 @@ parse_single_topic_list(int argc, char * argv[])
   return std::vector<char>(list.cbegin(), list.cend());
 }
 
-std::optional<std::pair<std::pair<char, char>, std::vector<char>>>
-parse_topic_pair_and_list(int argc, char * argv[])
-{
-  auto topic_list_pair_opt = parse_topic_list_pair(argc, argv);
-  if (!topic_list_pair_opt) {
-    return std::nullopt;
-  }
-  auto topic_list_pair = topic_list_pair_opt.value();
-
-  if (topic_list_pair.first.size() != 2) {
-    return std::nullopt;
-  }
-  return std::make_pair(
-    std::make_pair(topic_list_pair.first[0], topic_list_pair.first[1]), topic_list_pair.second);
-}
-
 std::optional<uint32_t>
 optional_stoul(const std::string & str)
 {

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <array>
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <memory>
@@ -33,23 +33,23 @@ struct cached_sub_t
 };
 
 /**
- * 2-to-N
- * Node that subscribes to 2 topics and publishes N topics.
+ * Partially synchronized N-to-M
+ * Node that subscribes to N topics and publishes M topics.
  * New messages are cached.
- * Publishes on N topics as soon as 2 new messages have been received.
+ * Publishes on M topics as soon as N new messages have been received.
  *
- * Based on:
+ * Based on the fusion node:
  * https://github.com/ros-realtime/reference-system/blob/main/reference_system/include/reference_system/nodes/rclcpp/fusion.hpp
  */
-class TwoToNNode : public rclcpp::Node
+class PartialSyncNtoMNode : public rclcpp::Node
 {
 public:
-  TwoToNNode(const std::pair<std::pair<char, char>, std::vector<char>> & topics)
-  : Node("two_to_n")
+  PartialSyncNtoMNode(const std::pair<std::vector<char>, std::vector<char>> & topics)
+  : Node("partial_sync_n_to_m")
   {
-    std::string info = "2-to-N topics: ";
+    std::string info = "Partial sync N-to-M topics: ";
     uint32_t sub_i = 0;
-    for (const auto & sub_topic : {topics.first.first, topics.first.second}) {
+    for (const auto & sub_topic : topics.first) {
       info += sub_topic;
       subs_[sub_i] =
         cached_sub_t{
@@ -84,7 +84,7 @@ public:
       pubs_.cend(),
       std::back_inserter(link_pubs),
       [](const auto & p){ return static_cast<const void *>(p->get_publisher_handle().get()); });
-    TRACEPOINT(message_link_2_to_n, link_subs.data(), link_pubs.data(), link_pubs.size());
+    TRACEPOINT(message_link_2_to_n, link_subs.data(), link_subs.size(), link_pubs.data(), link_pubs.size());
   }
 
 private:
@@ -95,7 +95,7 @@ private:
     subs_[sub_i].empty = false;
 
     // Unless one of the caches is empty (hasn't received a new message yet)...
-    if (subs_[0].empty || subs_[1].empty) {
+    if (std::any_of(subs_.cbegin(), subs_.cend(), [](const auto & sub){ return sub.empty; })) {
       return;
     }
     // Compute something based on messages in cache
@@ -111,24 +111,25 @@ private:
       pub->publish(next_msg);
     }
     // Reset caches
-    subs_[0].empty = true;
-    subs_[1].empty = true;
+    for (auto & sub : subs_) {
+      sub.empty = true;
+    }
   }
 
-  std::array<cached_sub_t, 2> subs_;
+  std::vector<cached_sub_t> subs_;
   std::vector<rclcpp::Publisher<std_msgs::msg::String>::SharedPtr> pubs_;
 };
 
 int main(int argc, char * argv[])
 {
-  auto topics = utils::parse_topic_pair_and_list(argc, argv);
+  auto topics = utils::parse_topic_list_pair(argc, argv);
   if (!topics) {
     std::cerr << "USAGE: ab c" << std::endl;
     return 1;
   }
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<TwoToNNode>(topics.value()));
+  rclcpp::spin(std::make_shared<PartialSyncNtoMNode>(topics.value()));
   rclcpp::shutdown();
   return 0;
 }

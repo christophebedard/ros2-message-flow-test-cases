@@ -37,45 +37,45 @@ ament_target_dependencies(source
 )
 target_link_libraries(source utils)
 
-# 1-to-1
-add_executable(one_to_one
-  src/one_to_one.cpp
+# Sync 1-to-1
+add_executable(sync_one_to_one
+  src/sync_one_to_one.cpp
 )
-ament_target_dependencies(one_to_one
+ament_target_dependencies(sync_one_to_one
   rclcpp
   std_msgs
 )
-target_link_libraries(one_to_one utils)
+target_link_libraries(sync_one_to_one utils)
 
-# 1-to-N
-add_executable(one_to_n
-  src/one_to_n.cpp
+# Sync 1-to-N
+add_executable(sync_one_to_n
+  src/sync_one_to_n.cpp
 )
-ament_target_dependencies(one_to_n
+ament_target_dependencies(sync_one_to_n
   rclcpp
   std_msgs
 )
-target_link_libraries(one_to_n utils)
+target_link_libraries(sync_one_to_n utils)
 
-# N-to-M
-add_executable(n_to_m
-  src/n_to_m.cpp
+# Periodic async N-to-M
+add_executable(periodic_async_n_to_m
+  src/periodic_async_n_to_m.cpp
 )
-ament_target_dependencies(n_to_m
+ament_target_dependencies(periodic_async_n_to_m
   rclcpp
   std_msgs
 )
-target_link_libraries(n_to_m utils)
+target_link_libraries(periodic_async_n_to_m utils)
 
-# 2-to-N
-add_executable(two_to_n
-  src/two_to_n.cpp
+# Partially synchronized N-to-M
+add_executable(partial_sync_n_to_m
+  src/partial_sync_n_to_m.cpp
 )
-ament_target_dependencies(two_to_n
+ament_target_dependencies(partial_sync_n_to_m
   rclcpp
   std_msgs
 )
-target_link_libraries(two_to_n utils)
+target_link_libraries(partial_sync_n_to_m utils)
 
 # Sink
 add_executable(sink
@@ -90,10 +90,10 @@ target_link_libraries(sink utils)
 # Install message link type nodes
 install(TARGETS
   source
-  one_to_one
-  one_to_n
-  n_to_m
-  two_to_n
+  sync_one_to_one
+  sync_one_to_n
+  periodic_async_n_to_m
+  partial_sync_n_to_m
   sink
   DESTINATION lib/${PROJECT_NAME}
 )
