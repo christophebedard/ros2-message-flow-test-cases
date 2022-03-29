@@ -15,14 +15,12 @@
 """Launch file for a simple single fork case with N-to-M merge."""
 
 from launch import LaunchDescription
-from launch.actions import SetEnvironmentVariable
 from launch_ros.actions import Node
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
     return LaunchDescription([
-        SetEnvironmentVariable('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'),
         Trace(
             session_name='single_fork_n-to-m',
             events_kernel=[],

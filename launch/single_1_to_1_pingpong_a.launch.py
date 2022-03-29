@@ -15,14 +15,12 @@
 """Launch file for host 1 of 2 of a multi-host 1-to-1 ping pong case."""
 
 from launch import LaunchDescription
-from launch.actions import SetEnvironmentVariable
 from launch_ros.actions import Node
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
     return LaunchDescription([
-        SetEnvironmentVariable('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'),
         Trace(
             session_name='single_1-to-1_pingpong_a',
             events_kernel=[],

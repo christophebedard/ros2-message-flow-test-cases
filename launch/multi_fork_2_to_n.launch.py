@@ -15,14 +15,12 @@
 """Launch file for a multiple fork case with 2-to-N merge."""
 
 from launch import LaunchDescription
-from launch.actions import SetEnvironmentVariable
 from launch_ros.actions import Node
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
     return LaunchDescription([
-        SetEnvironmentVariable('RMW_IMPLEMENTATION', 'rmw_cyclonedds_cpp'),
         Trace(
             session_name='multi_fork_2-to-n',
             events_kernel=[],
