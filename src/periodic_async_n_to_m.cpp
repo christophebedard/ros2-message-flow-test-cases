@@ -32,7 +32,7 @@ struct cached_sub_t
 };
 
 /**
- * Periodic asynchronized N-to-M
+ * Periodic asynchronous N-to-M
  * Node that subscribes to a N topics and publishes M topics.
  * New messages are cached.
  * Publishes on M topics periodically.

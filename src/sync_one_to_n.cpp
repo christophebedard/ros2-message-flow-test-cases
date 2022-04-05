@@ -23,7 +23,7 @@
 #include "ros2_message_flow_testcases/utils.hpp"
 
 /**
- * Synchronized 1-to-N
+ * synchronous 1-to-N
  * Node that subscribes to a single topic and publishes N topics.
  * New messages are published directly on N topics on every new message that is received.
  * This link type does not require any instrumentation.

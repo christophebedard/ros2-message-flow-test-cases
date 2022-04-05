@@ -22,7 +22,7 @@
 #include "ros2_message_flow_testcases/utils.hpp"
 
 /**
- * Synchronized 1-to-1
+ * synchronous 1-to-1
  * Node that subscribes to a single topic and publishes a single topic.
  * A new message is published directly on every new message that is received.
  * This link type does not require any instrumentation.

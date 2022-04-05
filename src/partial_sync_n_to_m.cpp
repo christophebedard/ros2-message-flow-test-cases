@@ -33,7 +33,7 @@ struct cached_sub_t
 };
 
 /**
- * Partially synchronized N-to-M
+ * Partially synchronous N-to-M
  * Node that subscribes to N topics and publishes M topics.
  * New messages are cached.
  * Publishes on M topics as soon as N new messages have been received.

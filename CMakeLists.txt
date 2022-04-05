@@ -67,7 +67,7 @@ ament_target_dependencies(periodic_async_n_to_m
 )
 target_link_libraries(periodic_async_n_to_m utils)
 
-# Partially synchronized N-to-M
+# Partially sync N-to-M
 add_executable(partial_sync_n_to_m
   src/partial_sync_n_to_m.cpp
 )
