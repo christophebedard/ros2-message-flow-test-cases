@@ -88,7 +88,7 @@ public:
       pubs_.cend(),
       std::back_inserter(link_pubs),
       [](const auto & p){ return static_cast<const void *>(p->get_publisher_handle().get()); });
-    TRACEPOINT(message_link_n_to_m, link_subs.data(), link_subs.size(), link_pubs.data(), link_pubs.size());
+    TRACEPOINT(message_link_periodic_async, link_subs.data(), link_subs.size(), link_pubs.data(), link_pubs.size());
   }
 
 private:
