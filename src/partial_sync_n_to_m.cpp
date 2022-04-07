@@ -51,7 +51,7 @@ public:
     uint32_t sub_i = 0;
     for (const auto & sub_topic : topics.first) {
       info += sub_topic;
-      subs_[sub_i] =
+      subs_.push_back(
         cached_sub_t{
           this->create_subscription<std_msgs::msg::String>(
             std::string("topic_") + sub_topic,
@@ -60,7 +60,7 @@ public:
               this->sub_callback(msg, sub_i);
             }),
           nullptr,
-          true};
+          true});
       sub_i++;
     }
     info += "-";
