@@ -14,13 +14,19 @@
 
 """Launch file for the periodic async N-to-M message link type."""
 
-from launch import LaunchDescription
-from launch_ros.actions import Node
+import launch
+import launch_ros
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
-    return LaunchDescription([
+    length_arg = launch.actions.DeclareLaunchArgument(
+        'length',
+        default_value='30.0',
+        description='length of execution in seconds',
+    )
+    return launch.LaunchDescription([
+        length_arg,
         Trace(
             session_name='single_periodic_async_n-to-m',
             events_kernel=[],
@@ -29,22 +35,33 @@ def generate_launch_description():
                 'ros2:*',
             ],
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['ab', '100'],
+            arguments=['a', '5'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
+            package='ros2_message_flow_testcases',
+            executable='source',
+            arguments=['b', '12'],
+            output='screen',
+        ),
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='periodic_async_n_to_m',
-            arguments=['ab', 'cd', '50'],
+            arguments=['ab', 'cd', '8'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='sink',
             arguments=['cd'],
             output='screen',
+        ),
+        # Shut down after some time, otherwise the system would run indefinitely
+        launch.actions.TimerAction(
+            period=launch.substitutions.LaunchConfiguration(length_arg.name),
+            actions=[launch.actions.Shutdown(reason='stopping system')],
         ),
     ])

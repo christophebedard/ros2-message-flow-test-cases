@@ -14,13 +14,19 @@
 
 """Launch file for a multiple fork case with partial sync N-to-M merge."""
 
-from launch import LaunchDescription
-from launch_ros.actions import Node
+import launch
+import launch_ros
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
-    return LaunchDescription([
+    length_arg = launch.actions.DeclareLaunchArgument(
+        'length',
+        default_value='30.0',
+        description='length of execution in seconds',
+    )
+    return launch.LaunchDescription([
+        length_arg,
         Trace(
             session_name='multi_fork_partial_sync_n-to-m',
             events_kernel=[],
@@ -29,34 +35,39 @@ def generate_launch_description():
                 'ros2:*',
             ],
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['a', '50'],
+            arguments=['a', '5'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='sync_one_to_one',
             arguments=['a', 'c'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='sync_one_to_one',
             arguments=['a', 'd'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='partial_sync_n_to_m',
             arguments=['cd', 'e'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='sink',
             arguments=['e'],
             output='screen',
+        ),
+        # Shut down after some time, otherwise the system would run indefinitely
+        launch.actions.TimerAction(
+            period=launch.substitutions.LaunchConfiguration(length_arg.name),
+            actions=[launch.actions.Shutdown(reason='stopping system')],
         ),
     ])

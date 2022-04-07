@@ -14,13 +14,19 @@
 
 """Launch file for the partial sync N-to-M message link type."""
 
-from launch import LaunchDescription
-from launch_ros.actions import Node
+import launch
+import launch_ros
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
-    return LaunchDescription([
+    length_arg = launch.actions.DeclareLaunchArgument(
+        'length',
+        default_value='30.0',
+        description='length of execution in seconds',
+    )
+    return launch.LaunchDescription([
+        length_arg,
         Trace(
             session_name='single_partial_sync_N-to-M',
             events_kernel=[],
@@ -29,28 +35,33 @@ def generate_launch_description():
                 'ros2:*',
             ],
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['a', '100'],
+            arguments=['a', '10'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='source',
-            arguments=['b', '40'],
+            arguments=['b', '4'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='partial_sync_n_to_m',
             arguments=['ab', 'c'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='sink',
             arguments=['c'],
             output='screen',
+        ),
+        # Shut down after some time, otherwise the system would run indefinitely
+        launch.actions.TimerAction(
+            period=launch.substitutions.LaunchConfiguration(length_arg.name),
+            actions=[launch.actions.Shutdown(reason='stopping system')],
         ),
     ])

@@ -14,13 +14,19 @@
 
 """Launch file for host 1 of 2 of a multi-host sync 1-to-1 ping pong case."""
 
-from launch import LaunchDescription
-from launch_ros.actions import Node
+import launch
+import launch_ros
 from tracetools_launch.action import Trace
 
 
 def generate_launch_description():
-    return LaunchDescription([
+    length_arg = launch.actions.DeclareLaunchArgument(
+        'length',
+        default_value='30.0',
+        description='length of execution in seconds',
+    )
+    return launch.LaunchDescription([
+        length_arg,
         Trace(
             session_name='single_sync_1-to-1_pingpong_a',
             events_kernel=[],
@@ -29,16 +35,21 @@ def generate_launch_description():
                 'ros2:*',
             ],
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='source',
             arguments=['a', '5'],
             output='screen',
         ),
-        Node(
+        launch_ros.actions.Node(
             package='ros2_message_flow_testcases',
             executable='sync_one_to_one',
             arguments=['b', 'c'],
             output='screen',
+        ),
+        # Shut down after some time, otherwise the system would run indefinitely
+        launch.actions.TimerAction(
+            period=launch.substitutions.LaunchConfiguration(length_arg.name),
+            actions=[launch.actions.Shutdown(reason='stopping system')],
         ),
     ])
