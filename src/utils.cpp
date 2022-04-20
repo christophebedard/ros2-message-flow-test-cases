@@ -109,4 +109,14 @@ parse_period(int argc, char * argv[], const uint16_t num_args_before)
   return optional_stoul(str);
 }
 
+std::optional<std::string>
+parse_string(int argc, char * argv[], int pos)
+{
+  if (argc < pos + 1) {
+    return std::nullopt;
+  }
+  
+  return std::string(argv[pos]);
+}
+
 }  // namespace utils

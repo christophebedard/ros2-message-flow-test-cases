@@ -37,6 +37,16 @@ ament_target_dependencies(source
 )
 target_link_libraries(source utils)
 
+# Source (timestamp)
+add_executable(source_t
+  src/source_time.cpp
+)
+ament_target_dependencies(source_t
+  rclcpp
+  std_msgs
+)
+target_link_libraries(source_t utils)
+
 # Sync 1-to-1
 add_executable(sync_one_to_one
   src/sync_one_to_one.cpp
@@ -46,6 +56,16 @@ ament_target_dependencies(sync_one_to_one
   std_msgs
 )
 target_link_libraries(sync_one_to_one utils)
+
+# Sync 1-to-1 (timestamp)
+add_executable(sync_one_to_one_t
+  src/sync_one_to_one_timestamp.cpp
+)
+ament_target_dependencies(sync_one_to_one_t
+  rclcpp
+  std_msgs
+)
+target_link_libraries(sync_one_to_one_t utils)
 
 # Sync 1-to-N
 add_executable(sync_one_to_n
@@ -87,6 +107,16 @@ ament_target_dependencies(sink
 )
 target_link_libraries(sink utils)
 
+# Sink (timestamp)
+add_executable(sink_t
+  src/sink_timestamp.cpp
+)
+ament_target_dependencies(sink_t
+  rclcpp
+  std_msgs
+)
+target_link_libraries(sink_t utils)
+
 # Install message link type nodes
 install(TARGETS
   source
@@ -95,6 +125,12 @@ install(TARGETS
   periodic_async_n_to_m
   partial_sync_n_to_m
   sink
+  source_t
+  sync_one_to_one_t
+  # sync_one_to_n_t
+  # periodic_async_n_to_m_t
+  # partial_sync_n_to_m_t
+  sink_t
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -41,6 +41,9 @@ parse_single_topic_and_list(int argc, char * argv[]);
 std::optional<uint32_t>
 parse_period(int argc, char * argv[], const uint16_t num_args_before);
 
+std::optional<std::string>
+parse_string(int argc, char * argv[], int pos);
+
 }  // namespace utils
 
 #endif  // ROS2_MESSAGE_FLOW_TESTCASES__UTILS_HPP_

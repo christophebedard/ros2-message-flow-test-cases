@@ -16,21 +16,30 @@
 #include <memory>
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/string.hpp"
+#include "std_msgs/msg/int64.hpp"
 
 #include "ros2_message_flow_testcases/utils.hpp"
-#include "ros2_message_flow_testcases/sink.hpp"
+#include "ros2_message_flow_testcases/sync_one_to_one.hpp"
 
 int main(int argc, char * argv[])
 {
-  auto topics = utils::parse_single_topic_list(argc, argv);
-  if (!topics) {
-    std::cerr << "USAGE: ab" << std::endl;
+  auto topics = utils::parse_single_topic_pair(argc, argv);
+  auto wait = utils::parse_period(argc, argv, 2);
+  if (!topics || !wait) {
+    std::cerr << "USAGE: a b 50" << std::endl;
     return 1;
   }
+  auto wait_time = std::chrono::milliseconds(wait.value());
 
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<SinkNode<std_msgs::msg::String>>(topics.value()));
+  rclcpp::spin(std::make_shared<SyncOneToOneNode<std_msgs::msg::Int64>>(
+    topics.value(),
+    [wait_time](){
+      auto start = std::chrono::system_clock::now();
+      while (std::chrono::system_clock::now() - start < wait_time) {
+        // Do nothing
+      }
+    }));
   rclcpp::shutdown();
   return 0;
 }
