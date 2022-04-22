@@ -3,23 +3,21 @@
 This repo contains simple test cases for different message link types needed to extract the flow of messages in ROS 2.
 See the [ROS 2 message flow analysis repository](https://github.com/christophebedard/ros2-message-flow-analysis).
 
-<!-- TODO
-This is part of the [ROS 2 message flow paper](https://arxiv.org/abs/TODO).
+This is part of the [ROS 2 message flow paper](https://arxiv.org/abs/2204.10208).
 If you use or refer to this method or this repository, please cite:
-<!-- TODO replace with early access/published version when available ->
-* C. Bédard, P.-Y. Lajoie, G. Beltrame, and M. Dagenais, "TODO," *arXiv preprint arXiv:22xy.01234*, 2022.
+<!-- TODO replace with early access/published version when available -->
+* C. Bédard, P.-Y. Lajoie, G. Beltrame, and M. Dagenais, "Message Flow Analysis with Complex Causal Links for Distributed ROS 2 Systems," *arXiv preprint arXiv:2204.10208*, 2022.
 
 BibTeX:
 
 ```bibtex
-@article{bedard2022messageflow,
-  title={TODO},
+@article{bedard2022message,
+  title={Message Flow Analysis with Complex Causal Links for Distributed ROS 2 Systems},
   author={B{\'e}dard, Christophe and Lajoie, Pierre-Yves and Beltrame, Giovanni and Dagenais, Michel},
-  journal={arXiv preprint arXiv:22xy.01234},
+  journal={arXiv preprint arXiv:2204.10208},
   year={2022}
 }
 ```
--->
 
 ## Message link types
 
